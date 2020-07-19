@@ -1,0 +1,117 @@
+<!--
+    @name: slide
+    @description:
+    @author: llsLeader
+    @time: 2020/7/18
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>slide</title>
+    <style type="text/css"></style>
+    <link rel="stylesheet" href="css/slideOne.css">
+</head>
+<body>
+    <div class="slider">
+        <div class="pic">
+            <ul>
+                <li><a href="#"><img src="img/4.webp"/></a></li>
+                <li><a href="#"><img src="img/1.jpg"/></a></li>
+                <li><a href="#"><img src="img/2.jpg"/></a></li>
+                <li><a href="#"><img src="img/3.jpg"/></a></li>
+                <li><a href="#"><img src="img/4.webp"/></a></li>
+                <li><a href="#"><img src="img/1.jpg"/></a></li>
+            </ul>
+        </div>
+        <div class="sliderDiv">
+            <div class="leftBtn">&lt;</div>
+            <div class="rightBtn">&gt;</div>
+        </div>
+        <div class="sliderPoint">
+            <ul>
+                <li class="on"></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+        $(function (){
+            let pointLi = $('.sliderPoint ul li');
+            let imgWidth = $('.pic ul li').width();
+            let picUl = $('.pic ul');
+            let slider = $('.slider');
+            let sliderBtn = $('.sliderDiv');
+            let sliderBtnHover = $('.sliderDiv div');
+            let index = 0;
+            let nowTime = new Date();
+
+            pointLi.click(function(){
+                index = $(this).index();
+                $(this).addClass('on').siblings().removeClass('on');
+                picUl.animate({
+                    marginLeft:-imgWidth*(index+1) + 'px'
+                },500);
+            });
+
+            slider.hover(function () {
+                sliderBtn.show();
+                clearInterval(timer);
+            },function () {
+                sliderBtn.hide();
+                timer = setInterval(function () {
+                    index++;
+                    ff();
+                },3000);
+            });
+
+            sliderBtnHover.hover(function () {
+                $(this).addClass('hover');
+            },function () {
+                $(this).removeClass('hover');
+            }).click(function () {
+                if(new Date() - nowTime > 300){
+                    nowTime = new Date();
+                    let i = $(this).index();
+                    i?index++:index--;
+                    ff();
+                }
+            }).mousedown(function () {
+                return false;
+            });
+
+            let timer = setInterval(function () {
+                index++;
+                ff();
+            },3000);
+
+            function ff() {
+                let liIndex = index;
+                if(liIndex==pointLi.length){
+                    liIndex=0;
+                }
+                else if(liIndex < 0){
+                    liIndex = pointLi.length - 1;
+                }
+                pointLi.eq(liIndex).addClass('on').siblings().removeClass('on');
+                picUl.animate({
+                    marginLeft:-imgWidth*(index+1) + 'px'
+                },500,function () {
+                    if(index == pointLi.length){
+                        picUl.css('marginLeft',-imgWidth+'px');
+                        index = 0;
+                    }
+                    else if(index < 0){
+                        picUl.css('marginLeft',-imgWidth*(pointLi.length)+'px');
+                        index = pointLi.length-1;
+                    }
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>
